@@ -1,6 +1,8 @@
 package com.jpmc.theater;
 
 
+import com.jpmc.theater.utilities.FormatUtils;
+
 import java.time.LocalDateTime;
 
 public class Showing {
@@ -32,6 +34,16 @@ public class Showing {
 
     public int getSequenceOfTheDay() {
         return sequenceOfTheDay;
+    }
+
+    public String toString(){
+        return "Sequence : " + getSequenceOfTheDay() +
+                "\nMovie Name : " + movie.getTitle() +
+                "\nStart Time : "  + FormatUtils.formatTime(getStartTime()) +
+                "\nPrice : " + getMovieFee() +
+                "\nDuration : " + FormatUtils.humanReadableFormat(movie.getRunningTime()) +
+                "\n" + FormatUtils.lineseparator();
+
     }
 
 }

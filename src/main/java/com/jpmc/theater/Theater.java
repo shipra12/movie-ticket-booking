@@ -8,13 +8,14 @@ import java.time.LocalTime;
 import java.util.*;
 
 public class Theater {
-
+    String theatreName;
     LocalDateProvider provider;
     Map<Movie, List<Showing>> allShows = new HashMap<>();
     private Integer currentSequence=1;
 
-    public Theater(LocalDateProvider provider) {
+    public Theater(LocalDateProvider provider, String theatreName) {
         this.provider = provider;
+        this.theatreName = theatreName;
         Movie spiderMan = new Movie("Spider-Man: No Way Home", Duration.ofMinutes(90), 12.5);
         Movie turningRed = new Movie("Turning Red", Duration.ofMinutes(85), 11);
         Movie theBatMan = new Movie("The Batman", Duration.ofMinutes(95), 9);
@@ -40,7 +41,13 @@ public class Theater {
             List<Showing> showingList = allShows.get(movie);
             result.addAll(showingList);
         }
+        Collections.sort(result, Comparator.comparingInt(Showing::getSequenceOfTheDay));
         return result;
     }
+    public String getTheatreName() { return theatreName; }
+
+    public LocalDateProvider getProvider() { return provider; }
+
+
 
 }

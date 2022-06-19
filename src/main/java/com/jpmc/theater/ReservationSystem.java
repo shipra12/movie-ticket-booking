@@ -5,8 +5,16 @@ import java.util.List;
 import java.util.Collections;
 
 public class ReservationSystem {
+    Discount discount;
     private List<Reservation> allReservations;
+    private List<Theater> allTheatres;
     private static int reservationId = 0;
+
+    public ReservationSystem() {
+        Discount discount = new Discount();
+        allReservations = new ArrayList<>();
+        allTheatres = new ArrayList<>();
+    }
 
     public Reservation reserve( Customer customer, Movie movie, Theater theater, Showing showing, int audienceCount){
         Reservation reservation = new Reservation(reservationId++, customer, theater, showing, audienceCount);
@@ -32,14 +40,31 @@ public class ReservationSystem {
 
     private Double applicableDiscount( Double basePrice, Movie movie, Showing showing){
         List<Double> applicable_discount = new ArrayList<>();
-        applicable_discount.add(Discount.getSpecialMovieList().contains(movie.getTitle()) ? 0.1 * basePrice : 0);
-        applicable_discount.add(showing.getSequenceOfTheDay() == 1 ? 3.0 : showing.getSequenceOfTheDay() == 2 ? 2.0 : 0);
-        applicable_discount.add(Discount.getDiscountDayOfMonth().equals(showing.getStartTime().getDayOfMonth())? 1.0 : 0);
-        //Double timeOfDayDiscount = showing.getStartTime() == 11
+        applicable_discount.add(discount.getSpecialMovieList().contains(movie.getTitle()) ? 0.1 * basePrice : 0);
+        applicable_discount.add(discount.getDiscountSequence().containsKey(showing.getSequenceOfTheDay()) ? discount.getDiscountSequence().get(showing.getSequenceOfTheDay()) : 0);
+        applicable_discount.add(discount.getDiscountDayOfMonth().equals(showing.getStartTime().getDayOfMonth())? 1.0 : 0);
+        int startTime = showing.getStartTime().getHour();
+        applicable_discount.add(startTime > discount.getStartTime().getValue0() && startTime < discount.getStartTime().getValue0() ? 0.25 * basePrice: 0);
 
         return Collections.max(applicable_discount);
     }
-    public void setAllReservations(List<Reservation> allReservations) { this.allReservations = allReservations; }
+    public void addTheatre(Theater theater){
+        allTheatres.add(theater);
+    }
 
+    public void printMovieSchedule(Theater theater){
+        System.out.println("Movie Schedule for " + theater.getTheatreName());
+        List<Showing> allShows = theater.getAllShows();
+        for ( Showing show: allShows ) {
+            System.out.println(show.toString());
+        }
+    }
+
+    public void printMovieSchedule(){
+        System.out.println("Schedule for all theaters");
+        for ( Theater theatre: allTheatres ) {
+            printMovieSchedule(theatre);
+        }
+    }
 
 }

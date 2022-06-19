@@ -1,3 +1,12 @@
+
+# Updates
+
+* Better structure for project
+* Additional functionalities added
+* New Requirements implemented
+* New schedule printing implemented
+* Main is being used as a placeholder for a MVC architecture controller. 
+
 # Introduction
 
 This is a poorly written application, and we're expecting the candidate to greatly improve this code base.

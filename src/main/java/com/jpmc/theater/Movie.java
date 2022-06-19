@@ -34,9 +34,4 @@ public class Movie {
         return Objects.hash(title, description, runningTime, ticketPrice);
     }
 
-    public String toString(){
-        return "Movie Name: " + getTitle() + "\n"+
-                "Runtime: " + getRunningTime() + "\n" +
-                "Ticket Price: " + getTicketPrice();
-    }
 }
