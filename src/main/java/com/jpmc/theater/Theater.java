@@ -44,6 +44,15 @@ public class Theater {
         Collections.sort(result, Comparator.comparingInt(Showing::getSequenceOfTheDay));
         return result;
     }
+
+    public List<Showing> getAllShows(Movie movie){
+        for( Movie currentMovie: allShows.keySet()){
+            if (currentMovie.hashCode() == movie.hashCode()){
+                return allShows.get(currentMovie);
+            }
+        }
+        return null;
+    }
     public String getTheatreName() { return theatreName; }
 
     public LocalDateProvider getProvider() { return provider; }

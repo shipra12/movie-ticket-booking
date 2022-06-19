@@ -17,18 +17,15 @@ public class Movie {
         this.runningTime = runningTime;
         this.ticketPrice = ticketPrice;
     }
-
     public String getTitle() {
         return title;
     }
-
     public Duration getRunningTime() {
         return runningTime;
     }
     public double getTicketPrice() {
         return ticketPrice;
     }
-
     @Override
     public int hashCode() {
         return Objects.hash(title, description, runningTime, ticketPrice);

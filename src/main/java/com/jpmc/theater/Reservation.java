@@ -16,9 +16,9 @@ public class Reservation {
         this.audienceCount = audienceCount;
         this.showing = showing;
     }
-
     public int getReservationId() { return reservationId; }
-
+    public Customer getCustomer() { return customer; }
     public void setTotalFee(Double totalFee) { this.totalFee = totalFee; }
+    public Double getTotalFee() { return totalFee; }
 
 }

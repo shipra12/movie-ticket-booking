@@ -1,8 +1,10 @@
 package com.jpmc.theater;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Collections;
+import java.lang.reflect.Type;
+import java.util.*;
+
+import com.google.gson.*;
+import com.google.gson.reflect.*;
 
 public class ReservationSystem {
     Discount discount;
@@ -31,7 +33,14 @@ public class ReservationSystem {
         }
         return result;
     }
-
+    public List<Reservation> searchReservation(Customer customer){
+        List<Reservation> result = new ArrayList<>();
+        for ( Reservation reservation : allReservations){
+            if (reservation.getCustomer().equals(customer))
+                result.add(reservation);
+        }
+        return result;
+    }
     private Double calculateReservationFee( Movie movie, Showing showing, int audienceCount){
         Double basePrice = movie.getTicketPrice();
         Double discountedAmount = applicableDiscount( basePrice, movie, showing);
@@ -40,11 +49,11 @@ public class ReservationSystem {
 
     private Double applicableDiscount( Double basePrice, Movie movie, Showing showing){
         List<Double> applicable_discount = new ArrayList<>();
-        applicable_discount.add(discount.getSpecialMovieList().contains(movie.getTitle()) ? 0.1 * basePrice : 0);
+        applicable_discount.add(discount.getSpecialMovieList().contains(movie.getTitle()) ? 0.2 * basePrice : 0);
         applicable_discount.add(discount.getDiscountSequence().containsKey(showing.getSequenceOfTheDay()) ? discount.getDiscountSequence().get(showing.getSequenceOfTheDay()) : 0);
         applicable_discount.add(discount.getDiscountDayOfMonth().equals(showing.getStartTime().getDayOfMonth())? 1.0 : 0);
         int startTime = showing.getStartTime().getHour();
-        applicable_discount.add(startTime > discount.getStartTime().getValue0() && startTime < discount.getStartTime().getValue0() ? 0.25 * basePrice: 0);
+        applicable_discount.add(startTime >= discount.getStartTime().getValue0() && startTime <= discount.getStartTime().getValue0() ? 0.25 * basePrice: 0);
 
         return Collections.max(applicable_discount);
     }
@@ -59,12 +68,29 @@ public class ReservationSystem {
             System.out.println(show.toString());
         }
     }
-
     public void printMovieSchedule(){
         System.out.println("Schedule for all theaters");
         for ( Theater theatre: allTheatres ) {
             printMovieSchedule(theatre);
         }
+    }
+    public void printMovieScheduleinJson(Theater theater){
+        Map<String, List<Map<String, String>>> jsonMap = new HashMap<>();
+        for( Showing show: theater.getAllShows()){
+            if (jsonMap.containsKey(show.getMovie().getTitle())){
+                List<Map<String, String>> currentShows = jsonMap.get(show.getMovie().getTitle());
+                currentShows.add(show.detailMap());
+            }
+            else{
+                List<Map<String, String>> newList = new ArrayList<>();
+                newList.add(show.detailMap());
+                jsonMap.put(String.valueOf(show.getMovie().getTitle()), newList);
+            }
+
+        }
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        String json = gson.toJson(jsonMap);
+        System.out.println(json);
     }
 
 }
